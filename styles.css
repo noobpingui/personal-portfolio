@@ -1,0 +1,861 @@
+/* ================================================================
+   DESIGN TOKENS — Single source of truth for all visual values.
+   Change these variables to re-theme the entire site instantly.
+================================================================ */
+:root {
+  /* Color palette */
+  --color-bg:           #ffffff;
+  --color-bg-alt:       #f7f7f8;      /* Slightly off-white for alternating sections */
+  --color-text:         #0a0a0b;      /* Near-black for primary text */
+  --color-text-muted:   #6b7280;      /* Gray for secondary text */
+  --color-text-faint:   #9ca3af;      /* Lighter gray for labels */
+  --color-border:       #e5e7eb;      /* Hairline borders */
+  --color-accent:       #0070f3;      /* Primary blue (Vercel-inspired) */
+  --color-accent-hover: #0060df;      /* Slightly darker on hover */
+  --color-accent-bg:    #eff6ff;      /* Light blue tint for badge */
+
+  /* Typography — system font stack, no network requests */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+               Arial, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+
+  /* Type scale */
+  --text-xs:   0.75rem;    /*  12px */
+  --text-sm:   0.875rem;   /*  14px */
+  --text-base: 1rem;       /*  16px */
+  --text-lg:   1.125rem;   /*  18px */
+  --text-xl:   1.25rem;    /*  20px */
+  --text-2xl:  1.5rem;     /*  24px */
+  --text-3xl:  1.875rem;   /*  30px */
+  --text-4xl:  2.25rem;    /*  36px */
+  --text-5xl:  3rem;       /*  48px */
+  --text-6xl:  3.75rem;    /*  60px */
+
+  /* Spacing scale */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Layout */
+  --container-max:    1100px;
+  --container-narrow: 680px;
+
+  /* Radii */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 200ms;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md:  0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg:  0 10px 30px -5px rgb(0 0 0 / 0.1);
+}
+
+
+/* ================================================================
+   RESET & BASE — Minimal sensible defaults
+================================================================ */
+
+/* Box-sizing for everything */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Smooth anchor scrolling — no JS needed */
+  scroll-behavior: smooth;
+  /* Prevent font size inflation on mobile */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Subpixel antialiasing for crisp text on macOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Global focus style — keyboard accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+
+/* ================================================================
+   LAYOUT UTILITIES
+================================================================ */
+
+/* Centered, max-width wrapper */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+/* Narrower container for single-column prose sections */
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+
+/* ================================================================
+   NAVIGATION — Fixed, glass-morphism inspired top bar
+================================================================ */
+
+.nav-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  /* Frosted-glass look without JS */
+  background-color: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.nav__logo {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  transition: opacity var(--duration) var(--ease-out);
+}
+
+.nav__logo:hover {
+  opacity: 0.7;
+}
+
+/* Navigation link list — horizontal row */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.nav__links a {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color var(--duration) var(--ease-out);
+}
+
+.nav__links a:hover {
+  color: var(--color-text);
+}
+
+/* Contact link styled as a pill button */
+.nav__cta {
+  background-color: var(--color-text);
+  color: var(--color-bg) !important;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm) !important;
+  transition: opacity var(--duration) var(--ease-out) !important;
+}
+
+.nav__cta:hover {
+  opacity: 0.8;
+}
+
+
+/* ================================================================
+   HERO SECTION — Large centered introduction
+================================================================ */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* Full viewport minus nav height */
+  min-height: 100svh;
+  padding-top: 60px; /* offset for fixed nav */
+  overflow: hidden;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-24);
+  gap: var(--space-6);
+}
+
+/* "Available for opportunities" status pill */
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid rgb(0 112 243 / 0.15);
+}
+
+/* Animated pulsing dot — CSS only */
+.hero__badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #22c55e; /* green */
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* Large display name */
+.hero__name {
+  font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* Role / subtitle */
+.hero__role {
+  font-size: clamp(var(--text-base), 2vw, var(--text-xl));
+  color: var(--color-text-muted);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero__role-separator {
+  color: var(--color-border);
+}
+
+/* Main tagline paragraph */
+.hero__tagline {
+  font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+  color: var(--color-text-muted);
+  max-width: 560px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* CTA button row */
+.hero__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+/* Social links row */
+.hero__social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+}
+
+/* Individual social link with icon */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.social-link:hover {
+  color: var(--color-text);
+  transform: translateY(-1px);
+}
+
+/* Decorative background orb — radial gradient blob */
+.hero__orb {
+  position: absolute;
+  top: -20%;
+  right: -15%;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  /* Soft blue/purple gradient */
+  background: radial-gradient(
+    ellipse at center,
+    rgb(0 112 243 / 0.06) 0%,
+    rgb(139 92 246 / 0.04) 50%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+
+/* ================================================================
+   BUTTON SYSTEM — Reusable across sections
+================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--duration) var(--ease-out),
+              border-color      var(--duration) var(--ease-out),
+              color             var(--duration) var(--ease-out),
+              box-shadow        var(--duration) var(--ease-out),
+              transform         var(--duration) var(--ease-out);
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Solid filled button */
+.btn--primary {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+}
+
+.btn--primary:hover {
+  background-color: #1a1a1b;
+  box-shadow: var(--shadow-md);
+}
+
+/* Outlined ghost button */
+.btn--ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-text-muted);
+  background-color: var(--color-bg-alt);
+}
+
+/* Smaller variant for project cards */
+.btn--sm {
+  font-size: var(--text-xs);
+  padding: var(--space-2) var(--space-4);
+}
+
+
+/* ================================================================
+   SECTION SHELL — Shared section structure
+================================================================ */
+
+.section {
+  padding-top: var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+/* Alternate background for visual rhythm between sections */
+.section--alt {
+  background-color: var(--color-bg-alt);
+}
+
+/* Section header: label + title + optional subtitle */
+.section__header {
+  text-align: center;
+  margin-bottom: var(--space-16);
+}
+
+.section__label {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+
+.section__title {
+  font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.section__subtitle {
+  margin-top: var(--space-4);
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+
+/* ================================================================
+   SKILLS GRID — Three-column card layout
+================================================================ */
+
+/* auto-fill with min width so cards wrap gracefully */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+}
+
+.skill-card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  /* Subtle lift on hover */
+  transition: box-shadow var(--duration) var(--ease-out),
+              transform  var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out);
+}
+
+.skill-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: rgb(0 112 243 / 0.2);
+}
+
+/* Icon wrapper */
+.skill-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: var(--color-accent-bg);
+  border-radius: var(--radius-md);
+  color: var(--color-accent);
+  margin-bottom: var(--space-5);
+}
+
+.skill-card__title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-5);
+  color: var(--color-text);
+}
+
+/* Skill pill tags */
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.skill-tag {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  padding: var(--space-1) var(--space-3);
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  transition: background-color var(--duration) var(--ease-out),
+              color var(--duration) var(--ease-out);
+}
+
+.skill-card:hover .skill-tag {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-color: rgb(0 112 243 / 0.2);
+}
+
+
+/* ================================================================
+   PROJECTS GRID — Three project cards
+================================================================ */
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+/* Card uses Flexbox column so footer stays at bottom */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow var(--duration) var(--ease-out),
+              transform  var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out);
+}
+
+.project-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: rgb(0 112 243 / 0.2);
+}
+
+.project-card__body {
+  flex: 1;          /* Push footer to bottom */
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* "Coming Soon" status badge */
+.project-card__status {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+.project-card__title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.project-card__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  flex: 1;
+}
+
+/* Tech stack tags */
+.project-card__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+
+.project-card__stack li {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-accent);
+  background-color: var(--color-accent-bg);
+  border: 1px solid rgb(0 112 243 / 0.15);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+/* Card footer — border-top separator + button row */
+.project-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-8);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-alt);
+}
+
+
+/* ================================================================
+   ABOUT SECTION
+================================================================ */
+
+.about__content {
+  text-align: center;
+}
+
+.about__text {
+  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+/* Thin horizontal rule between bio and fact strips */
+.about__divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-10) 0;
+}
+
+/* Horizontal fact row — 3 equally-spaced items */
+.about__facts {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+.about__fact {
+  text-align: center;
+}
+
+.about__fact dt {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-1);
+}
+
+.about__fact dd {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+
+/* ================================================================
+   CONTACT SECTION
+================================================================ */
+
+/* Vertical list of contact rows */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-8);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--duration) var(--ease-out);
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+.contact-item:hover {
+  background-color: var(--color-bg-alt);
+}
+
+.contact-item__label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.contact-item__link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--duration) var(--ease-out),
+              color var(--duration) var(--ease-out);
+}
+
+.contact-item__link:hover {
+  color: var(--color-accent-hover);
+  text-decoration-color: var(--color-accent-hover);
+}
+
+
+/* ================================================================
+   FOOTER
+================================================================ */
+
+.footer {
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.footer__text {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.footer__separator {
+  color: var(--color-border);
+}
+
+
+/* ================================================================
+   RESPONSIVE — Mobile-first breakpoints
+================================================================ */
+
+/* ---- Small (≤ 480px) ---- */
+@media (max-width: 480px) {
+  .container {
+    padding-inline: var(--space-4);
+  }
+
+  /* Stack nav links — hide on very small screens to avoid overflow */
+  .nav__links {
+    display: none;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+
+  .hero__social {
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .about__facts {
+    gap: var(--space-8);
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+  }
+}
+
+/* ---- Medium (≤ 768px) ---- */
+@media (max-width: 768px) {
+  /* Reduce section vertical padding */
+  .section {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+
+  .section__header {
+    margin-bottom: var(--space-10);
+  }
+
+  /* Single-column grids on tablet/mobile */
+  .skills-grid,
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Slightly smaller nav font */
+  .nav__links {
+    gap: var(--space-4);
+  }
+
+  .nav__links a {
+    font-size: var(--text-xs);
+  }
+}
+
+/* ---- Large (≥ 1024px) ---- */
+@media (min-width: 1024px) {
+  /* On large screens enforce 3 equal columns */
+  .skills-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+/* ================================================================
+   PRINT — Strip color and layout for paper output
+================================================================ */
+@media print {
+  .nav-wrapper,
+  .hero__orb {
+    display: none;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+}
