@@ -5,14 +5,14 @@
 :root {
   /* Color palette */
   --color-bg:           #ffffff;
-  --color-bg-alt:       #f7f7f8;      /* Slightly off-white for alternating sections */
+  --color-bg-alt:       #f7f8fa;      /* Slightly off-white for alternating sections */
   --color-text:         #0a0a0b;      /* Near-black for primary text */
-  --color-text-muted:   #6b7280;      /* Gray for secondary text */
+  --color-text-muted:   #5c6370;      /* Gray for secondary text — slightly richer */
   --color-text-faint:   #9ca3af;      /* Lighter gray for labels */
-  --color-border:       #e5e7eb;      /* Hairline borders */
+  --color-border:       #e4e7ec;      /* Hairline borders */
   --color-accent:       #0070f3;      /* Primary blue (Vercel-inspired) */
   --color-accent-hover: #0060df;      /* Slightly darker on hover */
-  --color-accent-bg:    #eff6ff;      /* Light blue tint for badge */
+  --color-accent-bg:    #eef5ff;      /* Light blue tint for badge */
 
   /* Typography — system font stack, no network requests */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
@@ -30,6 +30,7 @@
   --text-4xl:  2.25rem;    /*  36px */
   --text-5xl:  3rem;       /*  48px */
   --text-6xl:  3.75rem;    /*  60px */
+  --text-7xl:  4.5rem;     /*  72px — hero display size */
 
   /* Spacing scale */
   --space-1:  0.25rem;
@@ -60,9 +61,28 @@
   --duration: 200ms;
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-md:  0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.06);
-  --shadow-lg:  0 10px 30px -5px rgb(0 0 0 / 0.1);
+  --shadow-sm:     0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md:     0 4px 20px 0 rgb(0 0 0 / 0.09), 0 2px 6px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg:     0 16px 40px -8px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.06);
+  --shadow-accent: 0 8px 28px -4px rgb(0 112 243 / 0.18);  /* Tinted lift for accent hover */
+}
+
+
+/* ================================================================
+   DARK MODE TOKENS — Override every design token when dark is active.
+   All components automatically re-skin because they read from variables.
+================================================================ */
+[data-theme="dark"] {
+  --color-bg:           #09090b;
+  --color-bg-alt:       #111116;
+  --color-text:         #ededed;
+  --color-text-muted:   #a1a1aa;
+  --color-text-faint:   #71717a;
+  --color-border:       #27272a;
+  --color-accent:       #60a5fa;      /* Blue-400: brighter for dark backgrounds */
+  --color-accent-hover: #93c5fd;
+  --color-accent-bg:    #0c1a33;
+  --shadow-accent:      0 8px 28px -4px rgb(96 165 250 / 0.22);
 }
 
 
@@ -112,6 +132,11 @@ a {
   text-decoration: none;
 }
 
+/* Smooth theme transition — only on the properties that change between themes */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Global focus style — keyboard accessibility */
 :focus-visible {
   outline: 2px solid var(--color-accent);
@@ -148,11 +173,12 @@ a {
   left: 0;
   right: 0;
   z-index: 100;
-  /* Frosted-glass look without JS */
+  /* Frosted-glass look — light mode base; dark mode overrides below */
   background-color: rgb(255 255 255 / 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .nav {
@@ -230,8 +256,16 @@ a {
   text-align: center;
   padding-top: var(--space-20);
   padding-bottom: var(--space-24);
-  gap: var(--space-6);
+  /* Remove uniform gap — control spacing per element below */
+  gap: 0;
 }
+
+/* Intentional spacing rhythm: tight between related items, open between groups */
+.hero__badge    { margin-bottom: var(--space-6); }
+.hero__name     { margin-bottom: var(--space-4); }
+.hero__role     { margin-bottom: var(--space-6); }
+.hero__tagline  { margin-bottom: var(--space-10); }
+.hero__actions  { margin-bottom: var(--space-10); }
 
 /* "Available for opportunities" status pill */
 .hero__badge {
@@ -263,12 +297,12 @@ a {
   50%       { opacity: 0.4; }
 }
 
-/* Large display name */
+/* Large display name — uses the new --text-7xl token for real impact */
 .hero__name {
-  font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+  font-size: clamp(var(--text-4xl), 8vw, var(--text-7xl));
   font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
   color: var(--color-text);
 }
 
@@ -288,13 +322,14 @@ a {
   color: var(--color-border);
 }
 
-/* Main tagline paragraph */
+/* Main tagline — light weight at large sizes reads as elegant, not weak */
 .hero__tagline {
-  font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+  font-size: clamp(var(--text-lg), 2.2vw, var(--text-2xl));
   color: var(--color-text-muted);
-  max-width: 560px;
-  line-height: 1.5;
-  font-weight: 400;
+  max-width: 580px;
+  line-height: 1.65;
+  font-weight: 300;
+  letter-spacing: 0.01em;
 }
 
 /* CTA button row */
@@ -331,22 +366,37 @@ a {
   transform: translateY(-1px);
 }
 
-/* Decorative background orb — radial gradient blob */
+/* Two decorative orbs — both pure CSS, no images */
 .hero__orb {
   position: absolute;
   top: -20%;
-  right: -15%;
-  width: 700px;
-  height: 700px;
+  right: -10%;
+  width: 780px;
+  height: 780px;
   border-radius: 50%;
-  /* Soft blue/purple gradient */
   background: radial-gradient(
     ellipse at center,
-    rgb(0 112 243 / 0.06) 0%,
-    rgb(139 92 246 / 0.04) 50%,
+    rgb(0 112 243 / 0.07) 0%,
+    rgb(99 102 241 / 0.05) 45%,
     transparent 70%
   );
   pointer-events: none;
+}
+
+/* Second orb — bottom-left for depth and visual balance */
+.hero__orb::after {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: -80%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(139 92 246 / 0.05) 0%,
+    transparent 65%
+  );
 }
 
 
@@ -394,6 +444,11 @@ a {
   box-shadow: var(--shadow-md);
 }
 
+/* Dark mode: primary button hover uses a light shade instead of near-black */
+[data-theme="dark"] .btn--primary:hover {
+  background-color: #d4d4d8;
+}
+
 /* Outlined ghost button */
 .btn--ghost {
   background-color: transparent;
@@ -434,20 +489,33 @@ a {
 }
 
 .section__label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* Short accent bar before each section label — decorative, purely visual */
+.section__label::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
 }
 
 .section__title {
-  font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
+  font-size: clamp(var(--text-3xl), 4vw, 2.75rem);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
   color: var(--color-text);
 }
 
@@ -475,36 +543,38 @@ a {
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-8);
-  /* Subtle lift on hover */
-  transition: box-shadow var(--duration) var(--ease-out),
-              transform  var(--duration) var(--ease-out),
+  padding: var(--space-10);   /* More breathing room */
+  /* Inset top accent: visible on hover without layout shift */
+  box-shadow: inset 0 3px 0 transparent;
+  transition: box-shadow  var(--duration) var(--ease-out),
+              transform   var(--duration) var(--ease-out),
               border-color var(--duration) var(--ease-out);
 }
 
 .skill-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
-  border-color: rgb(0 112 243 / 0.2);
+  box-shadow: inset 0 3px 0 var(--color-accent), var(--shadow-accent);
+  transform: translateY(-4px);
+  border-color: rgb(0 112 243 / 0.25);
 }
 
-/* Icon wrapper */
+/* Icon wrapper — slightly larger with a ring border for refinement */
 .skill-card__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   background-color: var(--color-accent-bg);
+  border: 1px solid rgb(0 112 243 / 0.12);
   border-radius: var(--radius-md);
   color: var(--color-accent);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .skill-card__title {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);    /* Bumped from --text-lg */
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-5);
   color: var(--color-text);
 }
@@ -542,7 +612,7 @@ a {
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-6);
+  gap: var(--space-8);   /* More generous gap than skills grid */
 }
 
 /* Card uses Flexbox column so footer stays at bottom */
@@ -553,20 +623,22 @@ a {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: box-shadow var(--duration) var(--ease-out),
-              transform  var(--duration) var(--ease-out),
+  /* Same inset top-accent technique as skill cards */
+  box-shadow: inset 0 3px 0 transparent;
+  transition: box-shadow  var(--duration) var(--ease-out),
+              transform   var(--duration) var(--ease-out),
               border-color var(--duration) var(--ease-out);
 }
 
 .project-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
-  border-color: rgb(0 112 243 / 0.2);
+  box-shadow: inset 0 3px 0 var(--color-accent), var(--shadow-accent);
+  transform: translateY(-5px);
+  border-color: rgb(0 112 243 / 0.25);
 }
 
 .project-card__body {
   flex: 1;          /* Push footer to bottom */
-  padding: var(--space-8);
+  padding: var(--space-10);   /* More breathing room */
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -588,16 +660,16 @@ a {
 }
 
 .project-card__title {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);   /* Bumped from --text-xl — more presence */
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--color-text);
 }
 
 .project-card__desc {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  line-height: 1.65;
+  line-height: 1.75;   /* More comfortable reading */
   flex: 1;
 }
 
@@ -625,7 +697,7 @@ a {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-5) var(--space-8);
+  padding: var(--space-5) var(--space-10);  /* Match body padding */
   border-top: 1px solid var(--color-border);
   background-color: var(--color-bg-alt);
 }
@@ -640,9 +712,10 @@ a {
 }
 
 .about__text {
-  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
+  font-size: clamp(var(--text-lg), 2vw, var(--text-xl));  /* Larger, more confident */
   color: var(--color-text-muted);
-  line-height: 1.8;
+  line-height: 1.85;
+  font-weight: 300;   /* Light weight for long-form prose */
 }
 
 /* Thin horizontal rule between bio and fact strips */
@@ -656,7 +729,7 @@ a {
 .about__facts {
   display: flex;
   justify-content: center;
-  gap: var(--space-12);
+  gap: var(--space-16);   /* More open spacing between facts */
   flex-wrap: wrap;
 }
 
@@ -674,7 +747,7 @@ a {
 }
 
 .about__fact dd {
-  font-size: var(--text-base);
+  font-size: var(--text-lg);   /* Slightly larger for visual weight */
   font-weight: 500;
   color: var(--color-text);
 }
@@ -699,9 +772,12 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-5) var(--space-8);
+  padding: var(--space-6) var(--space-8);   /* Taller rows */
   border-bottom: 1px solid var(--color-border);
-  transition: background-color var(--duration) var(--ease-out);
+  /* Inset left accent — zero layout shift on hover */
+  box-shadow: inset 3px 0 0 transparent;
+  transition: background-color var(--duration) var(--ease-out),
+              box-shadow       var(--duration) var(--ease-out);
 }
 
 .contact-item:last-child {
@@ -709,7 +785,8 @@ a {
 }
 
 .contact-item:hover {
-  background-color: var(--color-bg-alt);
+  background-color: var(--color-accent-bg);
+  box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
 .contact-item__label {
@@ -742,7 +819,7 @@ a {
 ================================================================ */
 
 .footer {
-  padding: var(--space-8) 0;
+  padding: var(--space-10) 0;   /* More vertical breathing room */
   border-top: 1px solid var(--color-border);
   background-color: var(--color-bg);
 }
@@ -760,6 +837,79 @@ a {
 .footer__separator {
   color: var(--color-border);
 }
+
+
+/* ================================================================
+   DARK MODE OVERRIDES — Properties that use hardcoded values
+   (CSS variables handle everything else automatically)
+================================================================ */
+
+/* Nav glass — needs its own dark background override */
+[data-theme="dark"] .nav-wrapper {
+  background-color: rgb(9 9 11 / 0.85);
+}
+
+/* Hero orbs — slightly more vivid on dark backgrounds */
+[data-theme="dark"] .hero__orb {
+  background: radial-gradient(
+    ellipse at center,
+    rgb(96 165 250 / 0.1) 0%,
+    rgb(139 92 246 / 0.07) 45%,
+    transparent 70%
+  );
+}
+
+[data-theme="dark"] .hero__orb::after {
+  background: radial-gradient(
+    ellipse at center,
+    rgb(139 92 246 / 0.08) 0%,
+    transparent 65%
+  );
+}
+
+
+/* ================================================================
+   THEME TOGGLE BUTTON — Sun/moon icon switcher in the nav
+================================================================ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-alt);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color var(--duration) var(--ease-out),
+              border-color     var(--duration) var(--ease-out),
+              color            var(--duration) var(--ease-out),
+              transform        var(--duration) var(--ease-out),
+              box-shadow       var(--duration) var(--ease-out);
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-bg);
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+  transform: rotate(12deg) scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:active {
+  transform: rotate(12deg) scale(0.95);
+}
+
+/* Icon visibility — CSS controls which icon shows, not JS */
+.toggle-icon--sun  { display: none; }
+.toggle-icon--moon { display: block; }
+
+[data-theme="dark"] .toggle-icon--sun  { display: block; }
+[data-theme="dark"] .toggle-icon--moon { display: none; }
 
 
 /* ================================================================
@@ -843,6 +993,98 @@ a {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+
+/* ================================================================
+   PARTICLE CANVAS — Fills the hero section behind all content
+================================================================ */
+
+#particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ================================================================
+   SCROLL REVEAL — Elements start hidden; JS adds .reveal--visible
+   when they enter the viewport via IntersectionObserver.
+   JS adds .reveal so that elements stay visible when JS is off.
+================================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+/* ================================================================
+   ORB DRIFT — Hero background orbs drift slowly so the hero
+   feels alive even between scroll interactions.
+================================================================ */
+
+@keyframes orb-drift {
+  0%   { transform: translate(0,   0)   scale(1);    }
+  25%  { transform: translate(-2%, 3%)  scale(1.03); }
+  50%  { transform: translate( 1%, 5%)  scale(0.98); }
+  75%  { transform: translate( 3%, 1%)  scale(1.02); }
+  100% { transform: translate(0,   0)   scale(1);    }
+}
+
+@keyframes orb-drift-b {
+  0%   { transform: translate(0,    0)   scale(1);    }
+  33%  { transform: translate( 3%, -2%)  scale(1.04); }
+  66%  { transform: translate(-2%,  3%)  scale(0.97); }
+  100% { transform: translate(0,    0)   scale(1);    }
+}
+
+.hero__orb        { animation: orb-drift   20s ease-in-out infinite; }
+.hero__orb::after { animation: orb-drift-b 26s ease-in-out infinite; }
+
+
+/* ================================================================
+   ICON FLOAT — Each skill card icon bobs independently.
+   Staggered delays keep them out of phase with each other.
+   Transform is safe here — no hover conflict on .skill-card__icon.
+================================================================ */
+
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0);   }
+  50%       { transform: translateY(-5px); }
+}
+
+.skill-card__icon { animation: icon-float 3.5s ease-in-out infinite; }
+
+.skill-card:nth-child(1) .skill-card__icon { animation-delay: 0s;   }
+.skill-card:nth-child(2) .skill-card__icon { animation-delay: 1.1s; }
+.skill-card:nth-child(3) .skill-card__icon { animation-delay: 2.2s; }
+
+
+/* ================================================================
+   BADGE BREATHE — "Coming Soon" project badges pulse softly,
+   reinforcing the in-progress state without being distracting.
+================================================================ */
+
+@keyframes badge-breathe {
+  0%, 100% { opacity: 1;    }
+  50%       { opacity: 0.45; }
+}
+
+.project-card__status { animation: badge-breathe 3s ease-in-out infinite; }
+
+.project-card:nth-child(1) .project-card__status { animation-delay: 0s;  }
+.project-card:nth-child(2) .project-card__status { animation-delay: 1s;  }
+.project-card:nth-child(3) .project-card__status { animation-delay: 2s;  }
 
 
 /* ================================================================

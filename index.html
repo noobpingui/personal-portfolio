@@ -6,6 +6,17 @@
   <meta name="description" content="Beto Fallas — Junior Backend Developer (Python) & AWS Architecture" />
   <title>Beto Fallas · Backend Developer</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/favicon.ico">
+  <!-- Anti-FOUC: sets theme before first paint so there's no white flash on dark preference -->
+  <script>
+    (function () {
+      var s = localStorage.getItem('theme');
+      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || (!s && d)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }());
+  </script>
 </head>
 <body>
 
@@ -14,11 +25,33 @@
   ============================================================ -->
   <header class="nav-wrapper" role="banner">
     <nav class="nav container" aria-label="Main navigation">
-      <a class="nav__logo" href="#hero">Beto Fallas</a>
+      <a class="nav__logo" href="#hero">Alberto Fallas, or just call me "Beto"</a>
       <ul class="nav__links" role="list">
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#about">About</a></li>
+        <!-- Dark mode toggle — sits between nav links and CTA -->
+        <li>
+          <button class="theme-toggle" id="themeToggle"
+                  aria-label="Switch to dark mode" title="Toggle dark mode">
+            <!-- Moon: visible in light mode — click to go dark -->
+            <svg class="toggle-icon toggle-icon--moon" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+            </svg>
+            <!-- Sun: visible in dark mode — click to go light -->
+            <svg class="toggle-icon toggle-icon--sun" xmlns="http://www.w3.org/2000/svg"
+                 width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41
+                       M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </button>
+        </li>
         <li><a href="#contact" class="nav__cta">Contact</a></li>
       </ul>
     </nav>
@@ -44,12 +77,11 @@
         <p class="hero__role">
           Junior Backend Developer (Python)
           <span class="hero__role-separator" aria-hidden="true">·</span>
-          AWS Architecture
+          AWS Certified Solutions Architect – Associate
         </p>
 
         <p class="hero__tagline">
-          I build clean, reliable backend APIs with Python<br />
-          while learning to design scalable systems in AWS.
+          Building clean backend systems with Python and designing scalable cloud solutions on AWS.
         </p>
 
         <!-- Primary CTAs -->
@@ -61,7 +93,7 @@
         <!-- Social links row -->
         <div class="hero__social" role="list" aria-label="Social links">
 
-          <a href="https://github.com/" target="_blank" rel="noopener noreferrer"
+          <a href="https://github.com/noobpingui" target="_blank" rel="noopener noreferrer"
              class="social-link" role="listitem" aria-label="GitHub profile">
             <!-- GitHub icon (inline SVG — no external request) -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -84,7 +116,7 @@
             GitHub
           </a>
 
-          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer"
+          <a href="https://linkedin.com/in/alberto-fallas-leiva-56406420a/" target="_blank" rel="noopener noreferrer"
              class="social-link" role="listitem" aria-label="LinkedIn profile">
             <!-- LinkedIn icon -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -102,7 +134,7 @@
             LinkedIn
           </a>
 
-          <a href="mailto:your@email.com"
+          <a href="mailto:albertofallas93@gmail.com"
              class="social-link" role="listitem" aria-label="Send email">
             <!-- Email icon -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -117,6 +149,9 @@
 
         </div>
       </div>
+
+      <!-- Particle network canvas — drawn by script.js -->
+      <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
       <!-- Decorative gradient orb — pure CSS, no images -->
       <div class="hero__orb" aria-hidden="true"></div>
@@ -168,10 +203,10 @@
             </div>
             <h3 class="skill-card__title">Cloud</h3>
             <ul class="skill-list" role="list">
+              <li class="skill-tag">AWS Certified Solutions Architect – Associate</li>
               <li class="skill-tag">AWS S3</li>
               <li class="skill-tag">CloudFront</li>
               <li class="skill-tag">IAM fundamentals</li>
-              <li class="skill-tag">Cloud architecture basics</li>
             </ul>
           </article>
 
@@ -217,10 +252,9 @@
             <div class="project-card__body">
               <!-- "Coming soon" pill -->
               <span class="project-card__status">Coming Soon</span>
-              <h3 class="project-card__title">Project Alpha</h3>
+              <h3 class="project-card__title">WIP</h3>
               <p class="project-card__desc">
-                A RESTful API built with Python that handles user authentication
-                and resource management with clean error responses and structured logging.
+                WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP.
               </p>
               <!-- Tech stack pills -->
               <ul class="project-card__stack" role="list" aria-label="Tech stack">
@@ -242,10 +276,9 @@
           <article class="project-card">
             <div class="project-card__body">
               <span class="project-card__status">Coming Soon</span>
-              <h3 class="project-card__title">Project Beta</h3>
+              <h3 class="project-card__title">WIP 2</h3>
               <p class="project-card__desc">
-                An AWS-hosted static site pipeline with CloudFront distribution,
-                custom IAM policies, and automated deployment scripts.
+                WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP.
               </p>
               <ul class="project-card__stack" role="list" aria-label="Tech stack">
                 <li>AWS</li>
@@ -266,10 +299,9 @@
           <article class="project-card">
             <div class="project-card__body">
               <span class="project-card__status">Coming Soon</span>
-              <h3 class="project-card__title">Project Gamma</h3>
+              <h3 class="project-card__title">WIP 3</h3>
               <p class="project-card__desc">
-                A CLI tool built in Python for automating repetitive developer
-                tasks, with Postman-tested endpoints and documented API contracts.
+                WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP WIP.
               </p>
               <ul class="project-card__stack" role="list" aria-label="Tech stack">
                 <li>Python</li>
@@ -304,10 +336,9 @@
 
         <div class="about__content">
           <p class="about__text">
-            I am a Systems Engineering student in Costa Rica focused on backend
-            development with Python and learning AWS architecture. I enjoy building
-            structured projects, documenting decisions, and improving code quality
-            through iteration.
+            I’m a Systems Engineer based in Costa Rica focused on backend development with Python and cloud architecture on AWS.
+            I enjoy building clean, well-structured systems and improving code quality through thoughtful design and iteration.
+            I’m currently seeking opportunities to grow as a backend developer while working on scalable systems and cloud-based architectures.
           </p>
 
           <!-- Decorative divider -->
@@ -351,24 +382,24 @@
 
           <li class="contact-item">
             <span class="contact-item__label">Email</span>
-            <a href="mailto:your@email.com" class="contact-item__link">
-              your@email.com
+            <a href="mailto:albertofallas93@gmail.com" class="contact-item__link">
+              albertofallas93@gmail.com
             </a>
           </li>
 
           <li class="contact-item">
             <span class="contact-item__label">GitHub</span>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer"
+            <a href="https://github.com/noobpingui" target="_blank" rel="noopener noreferrer"
                class="contact-item__link">
-              github.com/yourusername
+              github.com/noobpingui
             </a>
           </li>
 
           <li class="contact-item">
             <span class="contact-item__label">LinkedIn</span>
-            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer"
+            <a href="https://linkedin.com/in/alberto-fallas-leiva-56406420a/" target="_blank" rel="noopener noreferrer"
                class="contact-item__link">
-              linkedin.com/in/yourusername
+              linkedin.com/in/alberto-fallas-leiva-56406420a/
             </a>
           </li>
 
@@ -392,5 +423,6 @@
     </div>
   </footer>
 
+  <script src="script.js" defer></script>
 </body>
 </html>
